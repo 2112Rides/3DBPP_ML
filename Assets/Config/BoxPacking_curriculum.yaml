@@ -1,0 +1,79 @@
+# Curriculum Learning Configuration for 3D Box Packing
+# Save this as: config/BoxPacking_curriculum.yaml
+
+# This configuration gradually increases difficulty as the agent improves
+
+BoxPacker:
+  measure: reward
+  thresholds: [5.0, 10.0, 15.0, 20.0]
+  min_lesson_length: 100
+  signal_smoothing: true
+  parameters:
+    # Lesson 0: Very Easy - Few small boxes
+    lesson/0:
+      num_boxes: 3
+      min_box_size: 15.0
+      max_box_size: 25.0
+      size_variation: 0.2
+      pallet_height: 100.0
+      
+    # Lesson 1: Easy - More boxes, slight variation
+    lesson/1:
+      num_boxes: 5
+      min_box_size: 15.0
+      max_box_size: 30.0
+      size_variation: 0.3
+      pallet_height: 120.0
+      
+    # Lesson 2: Medium - Even more boxes, more variation
+    lesson/2:
+      num_boxes: 10
+      min_box_size: 10.0
+      max_box_size: 40.0
+      size_variation: 0.5
+      pallet_height: 150.0
+      
+    # Lesson 3: Hard - Many boxes, high variation
+    lesson/3:
+      num_boxes: 15
+      min_box_size: 10.0
+      max_box_size: 50.0
+      size_variation: 0.7
+      pallet_height: 180.0
+      
+    # Lesson 4: Very Hard - Maximum difficulty
+    lesson/4:
+      num_boxes: 20
+      min_box_size: 10.0
+      max_box_size: 50.0
+      size_variation: 1.0
+      pallet_height: 200.0
+
+# How to use this config:
+# 
+# 1. Modify your Unity C# code to read these parameters:
+#    
+#    In BoxPackingEnvironment.cs or similar:
+#    
+#    public override void OnEpisodeBegin()
+#    {
+#        // Get curriculum parameters
+#        var numBoxes = Academy.Instance.EnvironmentParameters.GetWithDefault("num_boxes", 5f);
+#        var sizeVariation = Academy.Instance.EnvironmentParameters.GetWithDefault("size_variation", 0.5f);
+#        
+#        // Use these parameters in your box generation
+#        boxSpawner.SetDifficulty(sizeVariation);
+#        remainingBoxes = boxSpawner.GenerateBoxSet((int)numBoxes);
+#    }
+#
+# 2. Start training with curriculum:
+#    
+#    mlagents-learn config/BoxPacking_config.yaml \
+#                    --curriculum=config/BoxPacking_curriculum.yaml \
+#                    --run-id=BoxPacking_Curriculum_v1
+#
+# 3. Monitor progress:
+#    - Agent will start with Lesson 0 (easiest)
+#    - When average reward > 5.0, advances to Lesson 1
+#    - Continues until reaching final lesson
+#    - Check TensorBoard to see lesson progression

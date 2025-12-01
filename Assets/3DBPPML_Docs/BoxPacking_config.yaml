@@ -1,0 +1,89 @@
+# ML-Agents Training Configuration for 3D Box Packing
+# Save this as: config/BoxPacking_config.yaml
+
+behaviors:
+  BoxPacker:
+    trainer_type: ppo
+    
+    hyperparameters:
+      # Batch size for training
+      # Larger = more stable but slower
+      batch_size: 2048
+      
+      # Buffer size (must be multiple of batch_size)
+      # Larger = better data diversity
+      buffer_size: 20480
+      
+      # Learning rate
+      # Start higher, decay over time
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      
+      # Entropy coefficient (encourages exploration)
+      # Higher = more exploration
+      beta: 5.0e-3
+      
+      # PPO clip range
+      # Controls how much policy can change per update
+      epsilon: 0.2
+      
+      # GAE lambda (bias-variance tradeoff)
+      lambd: 0.95
+      
+      # Number of epochs per update
+      num_epoch: 3
+    
+    network_settings:
+      # Normalize inputs (HIGHLY RECOMMENDED)
+      normalize: true
+      
+      # Number of hidden units per layer
+      hidden_units: 256
+      
+      # Number of hidden layers
+      num_layers: 3
+      
+      # Visual encoder type (if using camera/grid observations)
+      # Options: simple, nature_cnn, resnet
+      vis_encode_type: simple
+      
+      # Memory settings (for recurrent networks)
+      # memory:
+      #   memory_size: 128
+      #   sequence_length: 64
+    
+    reward_signals:
+      # Extrinsic reward (from environment)
+      extrinsic:
+        # Discount factor (how much to value future rewards)
+        gamma: 0.99
+        
+        # Reward signal strength
+        strength: 1.0
+      
+      # Optional: Curiosity-driven exploration
+      # curiosity:
+      #   strength: 0.01
+      #   gamma: 0.99
+      #   encoding_size: 256
+    
+    # Keep last N checkpoints
+    keep_checkpoints: 5
+    
+    # Total training steps
+    max_steps: 10000000
+    
+    # Time horizon for TD-lambda
+    time_horizon: 64
+    
+    # How often to write TensorBoard summaries
+    summary_freq: 10000
+    
+    # How often to save checkpoints
+    checkpoint_interval: 500000
+    
+    # Multi-threading (set false for debugging)
+    threaded: false
+    
+    # Self-play (for competitive scenarios)
+    # self_play: null

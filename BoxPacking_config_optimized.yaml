@@ -1,0 +1,153 @@
+# Optimized ML-Agents Training Configuration for 3D Box Packing
+# WITH ACTION MASKING ENABLED
+#
+# Key improvements over default config:
+# - Larger network to handle complex state space (137 observations)
+# - Normalization enabled for stable training
+# - Tuned hyperparameters for discrete action space with masking
+# - Higher exploration initially, decaying over time
+
+behaviors:
+  BoxPacker:
+    trainer_type: ppo
+
+    hyperparameters:
+      # Batch size - Larger for more stable gradients with action masking
+      # With action masking, we get higher quality samples
+      batch_size: 2048
+
+      # Buffer size (must be multiple of batch_size)
+      # 10x batch size provides good diversity
+      buffer_size: 20480
+
+      # Learning rate - Start moderate, decay linearly
+      # Action masking allows slightly higher LR since exploration is more efficient
+      learning_rate: 5.0e-4
+      learning_rate_schedule: linear
+
+      # Beta (entropy coefficient) - Encourages exploration
+      # Start higher since action masking reduces valid action space
+      # Decay over time as agent learns
+      beta: 1.0e-2
+      beta_schedule: linear
+
+      # Epsilon (PPO clip range) - How much policy can change per update
+      # Standard value works well with action masking
+      epsilon: 0.2
+      epsilon_schedule: linear
+
+      # Lambda (GAE) - Bias-variance tradeoff for advantage estimation
+      # Higher value (0.95) good for episodic tasks
+      lambd: 0.95
+
+      # Number of optimization epochs per update
+      num_epoch: 3
+
+    network_settings:
+      # CRITICAL: Normalize inputs for stable training
+      # Your observations have very different scales (0-1, ratios, etc.)
+      normalize: true
+
+      # Hidden units per layer
+      # Increased from default 128 to handle:
+      # - 137 observations (with height map)
+      # - 400 action outputs
+      # - Complex spatial reasoning
+      hidden_units: 256
+
+      # Number of hidden layers
+      # Deeper network for complex packing patterns
+      num_layers: 3
+
+      # Visual encoder (not using visual obs, but required parameter)
+      vis_encode_type: simple
+
+    reward_signals:
+      # Extrinsic reward from environment
+      extrinsic:
+        # Gamma (discount factor) - How much to value future rewards
+        # 0.99 = value long-term planning (important for bin packing)
+        gamma: 0.99
+
+        # Reward signal strength
+        strength: 1.0
+
+    # Checkpointing settings
+    keep_checkpoints: 10
+    checkpoint_interval: 250000
+
+    # Training duration
+    # Start with 2M steps to see improvement
+    # Increase if needed based on performance
+    max_steps: 2000000
+
+    # Time horizon for reward estimation
+    # 64 is good for episodes that can vary in length
+    time_horizon: 64
+
+    # TensorBoard logging frequency
+    summary_freq: 10000
+
+    # Single-threaded for easier debugging
+    # Set to true for faster training once stable
+    threaded: false
+
+# ============================================================================
+# TRAINING COMMAND
+# ============================================================================
+#
+# To start training with this config:
+#
+#   mlagents-learn BoxPacking_config_optimized.yaml --run-id=BoxPacking_ActionMask_v1
+#
+# To resume training:
+#
+#   mlagents-learn BoxPacking_config_optimized.yaml --run-id=BoxPacking_ActionMask_v1 --resume
+#
+# To view progress:
+#
+#   tensorboard --logdir results
+#
+# ============================================================================
+# EXPECTED IMPROVEMENTS WITH ACTION MASKING
+# ============================================================================
+#
+# Previous training (WITHOUT action masking):
+# - Mean Reward: -199 to -192 over 500k steps
+# - Standard Dev: ~4 (stuck in local minimum)
+# - Agent mostly tried invalid placements
+#
+# Expected with action masking:
+# - Positive rewards should appear within 50k steps
+# - Mean reward should improve to 0-10 range by 200k steps
+# - Standard deviation should be higher initially (10-20) as agent explores
+# - Success rate (completing episodes) should increase dramatically
+#
+# Monitor these metrics in TensorBoard:
+# - Environment/Cumulative Reward (should trend upward)
+# - Environment/Episode Length (should decrease as agent gets efficient)
+# - Policy/Learning Rate (should decay from 5e-4 to near 0)
+# - Policy/Beta (should decay from 1e-2 to near 0)
+# - Policy/Epsilon (should decay from 0.2 to near 0)
+#
+# ============================================================================
+# TROUBLESHOOTING
+# ============================================================================
+#
+# If reward doesn't improve:
+# 1. Check that action masking is working (no invalid placement penalties)
+# 2. Verify normalization is enabled (normalize: true)
+# 3. Check Unity Console for errors
+# 4. Reduce learning rate to 3e-4
+#
+# If training is unstable (reward jumps around):
+# 1. Increase batch_size to 4096
+# 2. Reduce learning_rate to 3e-4
+# 3. Enable threaded: true for more stable updates
+#
+# If agent learns too slowly:
+# 1. Increase learning_rate to 7e-4
+# 2. Reduce batch_size to 1024
+# 3. Increase beta to 2e-2 (more exploration)
+#
+# ============================================================================

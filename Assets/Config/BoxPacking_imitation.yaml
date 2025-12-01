@@ -1,0 +1,203 @@
+# Imitation Learning Configuration for 3D Box Packing
+# Save this as: config/BoxPacking_imitation.yaml
+
+# This configuration enables learning from demonstrations
+# Can use either Behavioral Cloning (BC), GAIL, or both
+
+behaviors:
+  BoxPacker:
+    trainer_type: ppo
+    
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 5.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+    
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 3
+      vis_encode_type: simple
+    
+    reward_signals:
+      # Extrinsic rewards from environment
+      extrinsic:
+        gamma: 0.99
+        strength: 0.5  # Reduced when using GAIL
+      
+      # GAIL (Generative Adversarial Imitation Learning)
+      # Learns a reward function from demonstrations
+      gail:
+        strength: 1.0
+        gamma: 0.99
+        encoding_size: 128
+        learning_rate: 3.0e-4
+        use_actions: true
+        use_vail: false
+        demo_path: demos/BoxPacking_expert.demo
+    
+    # Behavioral Cloning
+    # Direct supervised learning from demonstrations
+    behavioral_cloning:
+      # Path to demonstration file
+      demo_path: demos/BoxPacking_expert.demo
+      
+      # Number of pretraining steps
+      # Set to ~10% of max_steps for pure BC pretraining
+      # Then agent continues with RL
+      steps: 150000
+      
+      # Batch size for BC training
+      batch_size: 512
+      
+      # Number of epochs per BC update
+      num_epoch: 3
+      
+      # Samples per update
+      samples_per_update: 0  # 0 = use all available samples
+      
+      # Strength of BC loss (relative to RL loss)
+      # 1.0 = pure BC, 0.0 = pure RL
+      # Typically start high (1.0) then decay to 0.0-0.2
+      strength: 0.5
+      
+      # Strength schedule
+      # linear: gradually reduce BC influence
+      # constant: maintain constant BC influence
+      strength_schedule: linear
+    
+    max_steps: 5000000
+    time_horizon: 64
+    summary_freq: 10000
+    checkpoint_interval: 250000
+    keep_checkpoints: 5
+    threaded: false
+
+# ============================================================================
+# HOW TO COLLECT DEMONSTRATIONS
+# ============================================================================
+#
+# Method 1: Manual Demonstrations (Human Expert)
+# ----------------------------------------------
+# 1. In Unity, set your agent's Behavior Type to "Heuristic Only"
+# 2. Implement manual controls in the Heuristic() method
+# 3. Record demonstrations using the Demonstration Recorder component:
+#
+#    Add to your agent GameObject:
+#    - Add Component -> ML Agents -> Demonstration Recorder
+#    - Set "Demonstration Name" to "BoxPacking_expert"
+#    - Set "Demonstration Directory" to "demos"
+#    - Check "Record" checkbox
+#
+# 4. Play the game and perform ~50-100 successful episodes
+# 5. Demonstrations will be saved to Assets/demos/BoxPacking_expert.demo
+# 6. Copy .demo file to your Python project's demos/ folder
+#
+# Method 2: Heuristic Expert (Automated)
+# ---------------------------------------
+# 1. Implement a rule-based packing algorithm in Heuristic() method
+#    For example: First-Fit Decreasing, Best-Fit, or custom rules
+# 2. Follow steps 3-6 above
+# 3. Automated approach can generate thousands of demonstrations quickly
+#
+# Method 3: Existing Trained Agent
+# ---------------------------------
+# If you already have a trained agent, you can record its behavior:
+# 1. Load the trained model
+# 2. Set Behavior Type to "Inference Only"
+# 3. Add Demonstration Recorder and record
+#
+# ============================================================================
+# TRAINING WORKFLOW WITH IMITATION LEARNING
+# ============================================================================
+#
+# Phase 1: Pure Behavioral Cloning (Warm-start)
+# ---------------------------------------------
+# Train only on demonstrations for initial learning:
+#
+#   mlagents-learn config/BoxPacking_imitation.yaml \
+#                   --run-id=BoxPacking_BC_Pretrain \
+#                   --initialize-from=BoxPacking_BC_Pretrain \
+#                   --force
+#
+# Stop after BC pretraining steps complete (~150k steps)
+#
+# Phase 2: Fine-tuning with RL + BC
+# ----------------------------------
+# Continue training with both RL and BC:
+#
+#   mlagents-learn config/BoxPacking_imitation.yaml \
+#                   --run-id=BoxPacking_RL_BC \
+#                   --initialize-from=BoxPacking_BC_Pretrain \
+#                   --resume
+#
+# Phase 3: Pure RL (Optional)
+# ----------------------------
+# Once agent surpasses expert, switch to pure RL:
+# Set behavioral_cloning strength to 0.0 in config, then:
+#
+#   mlagents-learn config/BoxPacking_config.yaml \
+#                   --run-id=BoxPacking_RL_Only \
+#                   --initialize-from=BoxPacking_RL_BC \
+#                   --resume
+#
+# ============================================================================
+# MONITORING PROGRESS
+# ============================================================================
+#
+# TensorBoard metrics to watch:
+# - Environment/Cumulative Reward: Should start higher than random
+# - Losses/BC Loss: Should decrease during pretraining
+# - Losses/GAIL Policy Loss: Measures imitation quality
+# - Policy/Learning Rate: Should decay according to schedule
+#
+# Start TensorBoard:
+#   tensorboard --logdir results
+#
+# ============================================================================
+# TIPS FOR GOOD DEMONSTRATIONS
+# ============================================================================
+#
+# 1. Quality over Quantity:
+#    - 50-100 high-quality demos > 1000 mediocre demos
+#    - Demonstrate diverse strategies, not just one approach
+#
+# 2. Success Rate:
+#    - Aim for >80% success rate in demonstrations
+#    - Agent will struggle to exceed demo quality initially
+#
+# 3. Variety:
+#    - Show different box configurations
+#    - Demonstrate handling edge cases
+#    - Include both optimal and "good enough" solutions
+#
+# 4. Consistency:
+#    - Be consistent in your strategy
+#    - Avoid random or contradictory actions
+#
+# 5. Efficiency:
+#    - Demonstrate efficient packing (few invalid attempts)
+#    - Show good planning (consider future boxes)
+#
+# ============================================================================
+# TROUBLESHOOTING
+# ============================================================================
+#
+# Problem: Agent doesn't improve beyond demonstrations
+# Solution: Reduce BC strength or switch to pure RL
+#
+# Problem: Agent forgets demonstration skills during RL
+# Solution: Increase BC strength or GAIL strength
+#
+# Problem: Training is very slow
+# Solution: Start with pure BC pretraining, then add RL
+#
+# Problem: Agent overfits to demonstrations
+# Solution: Collect more diverse demonstrations or reduce BC steps
+#
+# ============================================================================
