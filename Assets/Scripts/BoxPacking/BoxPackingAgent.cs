@@ -63,7 +63,11 @@ namespace BoxPacking.MLAgents
         
         // Cache for valid placements
         private List<PlacementAction> validPlacements;
-        
+
+        // Cache for action masking (to avoid duplicate validation checks)
+        private bool hasAnyValidAction;
+        private bool actionMaskCacheValid;
+
         // Statistics for curriculum learning
         private float averagePackingEfficiency;
         private int totalEpisodesCompleted;
@@ -117,14 +121,17 @@ namespace BoxPacking.MLAgents
             episodeStartTime = Time.time;
             stepCount = 0;
             boxesPackedThisEpisode = 0;
-            
+
+            // Invalidate action mask cache
+            actionMaskCacheValid = false;
+
             // Reset pallet to empty state
             palletManager.Reset();
-            
+
             // Generate new box set based on curriculum
             int numBoxes = GetCurrentBoxCount();
             remainingBoxes = boxSpawner.GenerateBoxSet(numBoxes);
-            
+
             // Get first box
             currentBox = GetNextBox();
             
@@ -262,13 +269,14 @@ namespace BoxPacking.MLAgents
             // If no current box, don't mask anything (episode should end naturally)
             if (currentBox == null)
             {
+                actionMaskCacheValid = false;
                 return;
             }
 
             // Check each possible action and mask invalid ones
             int numRotations = 4;
             int totalGridPositions = gridResolution * gridResolution;
-            bool hasValidAction = false;
+            hasAnyValidAction = false;  // Cache this result for use in OnActionReceived
 
             for (int rotation = 0; rotation < numRotations; rotation++)
             {
@@ -290,7 +298,7 @@ namespace BoxPacking.MLAgents
                         // Track if we have at least one valid action
                         if (isValid)
                         {
-                            hasValidAction = true;
+                            hasAnyValidAction = true;
                         }
 
                         // Mask invalid actions (disable them)
@@ -299,9 +307,12 @@ namespace BoxPacking.MLAgents
                 }
             }
 
+            // Mark cache as valid (so we don't recheck in OnActionReceived)
+            actionMaskCacheValid = true;
+
             // If NO valid actions exist, unmask action 0 and handle in OnActionReceived
             // This prevents ML-Agents from throwing an exception
-            if (!hasValidAction)
+            if (!hasAnyValidAction)
             {
                 // Unmask first action as a "failure signal"
                 actionMask.SetActionEnabled(0, 0, true);
@@ -341,9 +352,9 @@ namespace BoxPacking.MLAgents
             int actionIndex = actions.DiscreteActions[0];
             PlacementAction placement = DecodeAction(actionIndex);
 
-            // Check if we're in a "no valid actions" state
-            // This happens when action 0 was the only unmasked action as a fallback
-            bool noValidPlacements = !HasAnyValidPlacement();
+            // Check if we're in a "no valid actions" state using cached result from action masking
+            // This avoids re-validating all 400 actions (huge performance improvement!)
+            bool noValidPlacements = actionMaskCacheValid && !hasAnyValidAction;
 
             if (noValidPlacements)
             {
@@ -399,7 +410,10 @@ namespace BoxPacking.MLAgents
                 
                 // Get next box
                 currentBox = GetNextBox();
-                
+
+                // Invalidate action mask cache for new box
+                actionMaskCacheValid = false;
+
                 if (debugMode)
                 {
                     Debug.Log($"[{gameObject.name}] Box placed successfully. " +
