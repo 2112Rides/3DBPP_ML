@@ -1,5 +1,150 @@
 Action Masking Output:
 
+
+*************************************************
+5th run Environment Config
+*************************************************
+(mlagents) PS C:\Users\dexte\anaconda3\envs\FirstMLEnv\3DBPP_ML\3DBPP_ML> mlagents-learn BoxPacking_config_optimized.yaml --run-id=Experiment4_ProperConfig
+2025-12-01 23:46:25.470810: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-12-01 23:46:26.820705: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+
+            ┐  ╖
+        ╓╖╬│╡  ││╬╖╖
+    ╓╖╬│││││┘  ╬│││││╬╖
+ ╖╬│││││╬╜        ╙╬│││││╖╖                               ╗╗╗
+ ╬╬╬╬╖││╦╖        ╖╬││╗╣╣╣╬      ╟╣╣╬    ╟╣╣╣             ╜╜╜  ╟╣╣
+ ╬╬╬╬╬╬╬╬╖│╬╖╖╓╬╪│╓╣╣╣╣╣╣╣╬      ╟╣╣╬    ╟╣╣╣ ╒╣╣╖╗╣╣╣╗   ╣╣╣ ╣╣╣╣╣╣ ╟╣╣╖   ╣╣╣
+ ╬╬╬╬┐  ╙╬╬╬╬│╓╣╣╣╝╜  ╫╣╣╣╬      ╟╣╣╬    ╟╣╣╣ ╟╣╣╣╙ ╙╣╣╣  ╣╣╣ ╙╟╣╣╜╙  ╫╣╣  ╟╣╣
+ ╬╬╬╬┐     ╙╬╬╣╣      ╫╣╣╣╬      ╟╣╣╬    ╟╣╣╣ ╟╣╣╬   ╣╣╣  ╣╣╣  ╟╣╣     ╣╣╣┌╣╣╜
+ ╬╬╬╜       ╬╬╣╣      ╙╝╣╣╬      ╙╣╣╣╗╖╓╗╣╣╣╜ ╟╣╣╬   ╣╣╣  ╣╣╣  ╟╣╣╦╓    ╣╣╣╣╣
+ ╙   ╓╦╖    ╬╬╣╣   ╓╗╗╖            ╙╝╣╣╣╣╝╜   ╘╝╝╜   ╝╝╝  ╝╝╝   ╙╣╣╣    ╟╣╣╣
+   ╩╬╬╬╬╬╬╦╦╬╬╣╣╗╣╣╣╣╣╣╣╝                                             ╫╣╣╣╣
+      ╙╬╬╬╬╬╬╬╣╣╣╣╣╣╝╜
+          ╙╬╬╬╣╣╣╜
+             ╙
+
+ Version information:
+  ml-agents: 1.1.0,
+  ml-agents-envs: 1.1.0,
+  Communicator API: 1.5.0,
+  PyTorch: 2.2.2+cu121
+2025-12-01 23:46:32.065501: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-12-01 23:46:33.015398: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[INFO] Listening on port 5004. Start training by pressing the Play button in the Unity Editor.
+[INFO] Connected to Unity environment with package version 2.0.2 and communication version 1.5.0
+[INFO] Connected new brain: BoxPacker?team=0
+[INFO] Hyperparameters for behavior name BoxPacker: 
+        trainer_type:   ppo
+        hyperparameters:
+          batch_size:   2048
+          buffer_size:  20480
+          learning_rate:        0.0005
+          beta: 0.01
+          epsilon:      0.2
+          lambd:        0.95
+          num_epoch:    3
+          shared_critic:        False
+          learning_rate_schedule:       linear
+          beta_schedule:        linear
+          epsilon_schedule:     linear
+        checkpoint_interval:    250000
+        network_settings:
+          normalize:    True
+          hidden_units: 256
+          num_layers:   3
+          vis_encode_type:      simple
+          memory:       None
+          goal_conditioning_type:       hyper
+          deterministic:        False
+        reward_signals:
+          extrinsic:
+            gamma:      0.99
+            strength:   1.0
+            network_settings:
+              normalize:        False
+              hidden_units:     128
+              num_layers:       2
+              vis_encode_type:  simple
+              memory:   None
+              goal_conditioning_type:   hyper
+              deterministic:    False
+        init_path:      None
+        keep_checkpoints:       10
+        even_checkpoints:       False
+        max_steps:      2000000
+        time_horizon:   64
+        summary_freq:   10000
+        threaded:       False
+        self_play:      None
+        behavioral_cloning:     None
+[INFO] BoxPacker. Step: 10000. Time Elapsed: 231.932 s. Mean Reward: 1.325. Std of Reward: 1.257. Training.
+[INFO] BoxPacker. Step: 20000. Time Elapsed: 472.880 s. Mean Reward: 1.338. Std of Reward: 1.240. Training.
+[INFO] BoxPacker. Step: 30000. Time Elapsed: 704.060 s. Mean Reward: 1.563. Std of Reward: 1.074. Training.
+[INFO] BoxPacker. Step: 40000. Time Elapsed: 935.724 s. Mean Reward: 1.572. Std of Reward: 1.050. Training.
+[INFO] BoxPacker. Step: 50000. Time Elapsed: 1163.499 s. Mean Reward: 1.734. Std of Reward: 0.893. Training.
+[INFO] BoxPacker. Step: 60000. Time Elapsed: 1390.221 s. Mean Reward: 1.729. Std of Reward: 0.840. Training.
+[INFO] BoxPacker. Step: 70000. Time Elapsed: 1604.538 s. Mean Reward: 1.780. Std of Reward: 0.824. Training.
+[INFO] BoxPacker. Step: 80000. Time Elapsed: 1832.550 s. Mean Reward: 1.790. Std of Reward: 0.818. Training.
+[INFO] BoxPacker. Step: 90000. Time Elapsed: 2085.772 s. Mean Reward: 1.812. Std of Reward: 0.805. Training.
+[INFO] BoxPacker. Step: 100000. Time Elapsed: 2320.461 s. Mean Reward: 1.799. Std of Reward: 0.782. Training.
+[INFO] BoxPacker. Step: 110000. Time Elapsed: 2545.094 s. Mean Reward: 1.803. Std of Reward: 0.773. Training.
+[INFO] BoxPacker. Step: 120000. Time Elapsed: 2776.103 s. Mean Reward: 1.815. Std of Reward: 0.791. Training.
+[INFO] BoxPacker. Step: 130000. Time Elapsed: 3008.310 s. Mean Reward: 1.815. Std of Reward: 0.760. Training.
+[INFO] BoxPacker. Step: 140000. Time Elapsed: 3260.189 s. Mean Reward: 1.824. Std of Reward: 0.764. Training.
+[INFO] BoxPacker. Step: 150000. Time Elapsed: 3500.914 s. Mean Reward: 1.837. Std of Reward: 0.770. Training.
+[INFO] BoxPacker. Step: 160000. Time Elapsed: 3735.086 s. Mean Reward: 1.834. Std of Reward: 0.763. Training.
+[INFO] BoxPacker. Step: 170000. Time Elapsed: 3975.697 s. Mean Reward: 1.839. Std of Reward: 0.774. Training.
+[WARNING] Restarting worker[0] after 'The Unity environment took too long to respond. Make sure that :
+         The environment does not need user interaction to launch
+         The Agents' Behavior Parameters > Behavior Type is set to "Default"
+         The environment and the Python interface have compatible versions.
+         If you're running on a headless server without graphics support, turn off display by either passing --no-graphics option or build your Unity executable as server build.'
+2025-12-02 00:56:03.858710: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-12-02 00:56:08.425912: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[INFO] Listening on port 5004. Start training by pressing the Play button in the Unity Editor.
+[INFO] Exported results\Experiment4_ProperConfig\BoxPacker\BoxPacker-175133.onnx
+[INFO] Copied results\Experiment4_ProperConfig\BoxPacker\BoxPacker-175133.onnx to results\Experiment4_ProperConfig\BoxPacker.onnx.
+Traceback (most recent call last):
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\Scripts\mlagents-learn.exe\__main__.py", line 7, in <module>        
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\learn.py", line 270, in main    
+    run_cli(parse_command_line())
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\learn.py", line 266, in run_cli 
+    run_training(run_seed, options, num_areas)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\learn.py", line 138, in run_training
+    tc.start_learning(env_manager)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents_envs\timers.py", line 305, in wrapped
+    return func(*args, **kwargs)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\trainer_controller.py", line 175, in start_learning
+    n_steps = self.advance(env_manager)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents_envs\timers.py", line 305, in wrapped    
+    return func(*args, **kwargs)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\trainer_controller.py", line 233, in advance
+    new_step_infos = env_manager.get_steps()
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\env_manager.py", line 124, in get_steps
+    new_step_infos = self._step()
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\subprocess_env_manager.py", line 420, in _step
+    self._restart_failed_workers(step)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\subprocess_env_manager.py", line 328, in _restart_failed_workers
+    self.reset(self.env_parameters)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\env_manager.py", line 68, in reset
+    self.first_step_infos = self._reset_env(config)
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\subprocess_env_manager.py", line 446, in _reset_env
+    ew.previous_step = EnvironmentStep(ew.recv().payload, ew.worker_id, {}, {})
+  File "C:\Users\dexte\anaconda3\envs\mlagents\lib\site-packages\mlagents\trainers\subprocess_env_manager.py", line 101, in recv
+    raise env_exception
+mlagents_envs.exception.UnityTimeOutException: The Unity environment took too long to respond. Make sure that :    
+         The environment does not need user interaction to launch
+         The Agents' Behavior Parameters > Behavior Type is set to "Default"
+         The environment and the Python interface have compatible versions.
+         If you're running on a headless server without graphics support, turn off display by either passing --no-graphics option or build your Unity executable as server build.
+(mlagents) PS C:\Users\dexte\anaconda3\envs\FirstMLEnv\3DBPP_ML\3DBPP_ML> 
+
+
+
 **************
 V4 Output
 ***********************
