@@ -24,12 +24,27 @@ namespace BoxPacking.MLAgents
         {
             Debug.Log("=== ENVIRONMENT DIAGNOSTICS ===\n");
 
+            // Initialize components first
+            InitializeComponents();
+
             DiagnoseBoxSizes();
             DiagnosePalletCapacity();
             DiagnoseGridMapping();
             DiagnoseValidPlacements();
 
             Debug.Log("=== DIAGNOSTICS COMPLETE ===");
+        }
+
+        private void InitializeComponents()
+        {
+            if (boxSpawner != null)
+            {
+                boxSpawner.Initialize();
+            }
+            if (palletManager != null)
+            {
+                palletManager.Initialize();
+            }
         }
 
         [ContextMenu("1. Check Box Sizes")]
@@ -42,6 +57,9 @@ namespace BoxPacking.MLAgents
                 Debug.LogError("BoxSpawner not assigned!");
                 return;
             }
+
+            // Initialize if needed
+            boxSpawner.Initialize();
 
             // Generate test boxes
             var boxes = boxSpawner.GenerateBoxSet(testBoxCount);
@@ -81,6 +99,10 @@ namespace BoxPacking.MLAgents
                 Debug.LogError("PalletManager not assigned!");
                 return;
             }
+
+            // Initialize if needed
+            if (boxSpawner != null) boxSpawner.Initialize();
+            if (palletManager != null) palletManager.Initialize();
 
             Vector3 size = palletManager.palletSize;
             float totalVolume = size.x * size.y * size.z;
@@ -138,6 +160,10 @@ namespace BoxPacking.MLAgents
                 return;
             }
 
+            // Initialize if needed
+            if (boxSpawner != null) boxSpawner.Initialize();
+            if (palletManager != null) palletManager.Initialize();
+
             Debug.Log($"Grid Resolution: {gridResolution}×{gridResolution}");
             Debug.Log($"Total Grid Cells: {gridResolution * gridResolution}");
 
@@ -182,6 +208,9 @@ namespace BoxPacking.MLAgents
                 Debug.LogError("Required components not assigned!");
                 return;
             }
+
+            // Initialize if needed
+            InitializeComponents();
 
             // Generate one test box
             var boxes = boxSpawner.GenerateBoxSet(1);
@@ -241,6 +270,9 @@ namespace BoxPacking.MLAgents
                 Debug.LogError("Required components not assigned!");
                 return;
             }
+
+            // Initialize components
+            InitializeComponents();
 
             palletManager.Reset();
 
