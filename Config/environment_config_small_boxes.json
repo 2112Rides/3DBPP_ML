@@ -1,0 +1,75 @@
+{
+  "config_name": "Small Boxes - Easy Training",
+  "version": "1.0",
+  "description": "Smaller boxes for easier initial learning and higher success rate",
+
+  "pallet_settings": {
+    "size_x": 100.0,
+    "size_y": 100.0,
+    "size_z": 100.0,
+    "max_weight": 1000.0
+  },
+
+  "box_generation": {
+    "min_box_size_x": 5.0,
+    "min_box_size_y": 5.0,
+    "min_box_size_z": 5.0,
+    "max_box_size_x": 15.0,
+    "max_box_size_y": 15.0,
+    "max_box_size_z": 15.0,
+    "min_weight": 1.0,
+    "max_weight": 30.0,
+    "generation_strategy": "SimilarSizes",
+    "size_variation": 0.3
+  },
+
+  "agent_settings": {
+    "max_boxes_per_episode": 20,
+    "grid_resolution": 8,
+    "step_penalty": -0.01,
+    "end_on_invalid_placement": true,
+    "max_steps": 150,
+    "box_preview_count": 5,
+    "include_height_map": true,
+    "height_map_resolution": 8
+  },
+
+  "reward_settings": {
+    "success_reward": 1.5,
+    "invalid_placement_penalty": -1.0,
+    "volume_weight": 0.8,
+    "volume_efficiency_bonus": 0.3,
+    "flat_surface_bonus": 0.5,
+    "support_quality_weight": 0.3,
+    "height_penalty_weight": 0.2,
+    "corner_placement_bonus": 0.2,
+    "surface_creation_bonus": 0.4,
+    "gap_penalty_weight": 0.2,
+    "stability_weight": 0.3,
+    "use_reward_shaping": true,
+    "shaping_complexity": 1.0
+  },
+
+  "decision_requester": {
+    "decision_period": 5,
+    "take_actions_between_decisions": true
+  },
+
+  "visualization": {
+    "visualize_actions": false,
+    "debug_mode": false
+  },
+
+  "expected_results": {
+    "target_boxes_packed": "15-20 per episode",
+    "target_mean_reward": "+30 to +50",
+    "target_pallet_utilization": "70-90%"
+  },
+
+  "notes": [
+    "Smaller boxes = easier to pack, higher success rate",
+    "Good for initial training and confidence building",
+    "SimilarSizes strategy reduces complexity",
+    "Can pack 20+ boxes with these dimensions"
+  ]
+}

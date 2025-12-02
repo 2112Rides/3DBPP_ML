@@ -1,0 +1,83 @@
+{
+  "config_name": "Default Configuration",
+  "version": "1.0",
+  "description": "Base configuration for 3D bin packing with reasonable box sizes",
+
+  "pallet_settings": {
+    "size_x": 100.0,
+    "size_y": 100.0,
+    "size_z": 100.0,
+    "max_weight": 1000.0,
+    "comment": "Pallet dimensions and weight capacity"
+  },
+
+  "box_generation": {
+    "min_box_size_x": 8.0,
+    "min_box_size_y": 8.0,
+    "min_box_size_z": 8.0,
+    "max_box_size_x": 20.0,
+    "max_box_size_y": 20.0,
+    "max_box_size_z": 20.0,
+    "min_weight": 1.0,
+    "max_weight": 50.0,
+    "generation_strategy": "Random",
+    "size_variation": 1.0,
+    "comment": "Box generation parameters. Strategy options: Random, SimilarSizes, Graduated, Predefined, Curriculum"
+  },
+
+  "agent_settings": {
+    "max_boxes_per_episode": 15,
+    "grid_resolution": 8,
+    "step_penalty": -0.01,
+    "end_on_invalid_placement": true,
+    "max_steps": 100,
+    "box_preview_count": 5,
+    "include_height_map": true,
+    "height_map_resolution": 8,
+    "comment": "Agent behavior and observation settings. Reduced grid_resolution and height_map_resolution for better performance"
+  },
+
+  "reward_settings": {
+    "success_reward": 1.5,
+    "invalid_placement_penalty": -1.0,
+    "volume_weight": 0.8,
+    "volume_efficiency_bonus": 0.3,
+    "flat_surface_bonus": 0.5,
+    "support_quality_weight": 0.3,
+    "height_penalty_weight": 0.2,
+    "corner_placement_bonus": 0.2,
+    "surface_creation_bonus": 0.4,
+    "gap_penalty_weight": 0.2,
+    "stability_weight": 0.3,
+    "use_reward_shaping": true,
+    "shaping_complexity": 1.0,
+    "comment": "Reward calculation parameters"
+  },
+
+  "decision_requester": {
+    "decision_period": 5,
+    "take_actions_between_decisions": true,
+    "comment": "REQUIRED: Add Decision Requester component to agent. Decision period = steps between decisions"
+  },
+
+  "visualization": {
+    "visualize_actions": false,
+    "debug_mode": false,
+    "comment": "Set visualize_actions to false during training for better performance"
+  },
+
+  "expected_results": {
+    "target_boxes_packed": "10-15 per episode",
+    "target_mean_reward": "+20 to +40",
+    "target_pallet_utilization": "60-80%",
+    "comment": "What to expect with these settings after training"
+  },
+
+  "notes": [
+    "This configuration is optimized for initial training",
+    "Box sizes (8-20) allow for good variety and packing opportunities",
+    "Pallet 100x100x100 can fit 15-20 boxes of these sizes",
+    "Grid resolution 8 = 256 actions (8×8×4 rotations)",
+    "Use curriculum learning to gradually increase difficulty"
+  ]
+}
