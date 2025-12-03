@@ -1,0 +1,116 @@
+{
+  "config_name": "Back2BigBox Inspector Set Rewards",
+  "config_version": "2.0",
+  "description": "Changed all settings to match my inspector set settings, from the 'Large Boxes Stacking' config. The results from training are in next parameter.",
+  "date_created": "2025-12-02",
+  "based_on_experiment": "3DBPP_ML/Assets/MLAgent Training Output/Back2LargeBoxes_Rewards.md",
+
+  "pallet_settings": {
+    "size_x": 100.0,
+    "size_y": 200.0,
+    "size_z": 100.0,
+    "max_weight": 1000.0
+  },
+
+  "box_generation": {
+    "_comment": "CRITICAL: These are the ORIGINAL sizes that produced good stacking (screenshot). DO NOT REDUCE.",
+    "min_box_size_x": 10.0,
+    "min_box_size_y": 10.0,
+    "min_box_size_z": 10.0,
+    "max_box_size_x": 50.0,
+    "max_box_size_y": 50.0,
+    "max_box_size_z": 50.0,
+    "min_weight": 1.0,
+    "max_weight": 25.0,
+    "generation_strategy": "uniform_random",
+    "_comment_strategy": "Uniform random distribution of sizes within range",
+    "size_variation": 1.0,
+    "_comment_variation": "1.0 = full range variation"
+  },
+
+  "reward_settings": {
+    "_comment_rewards": "Optimized for LARGE boxes (10-50) - high success reward, minimal invalid penalty, BONUS for stacking",
+
+    "success_reward": 10,
+    "_comment_success": "Increased from 1.5 to 5.0 - large boxes harder to place, deserve bigger reward",
+
+    "invalid_placement_penalty": -0.1,
+    "_comment_invalid": "Reduced from -1.0 to -0.1 - with large boxes, invalid placements are expected",
+
+    "volume_weight": 0.8,
+    "_comment_volume": "Increased from 0.8 to 1.5 - large boxes = good utilization",
+
+    "volume_efficiency_bonus": 0.3,
+    "_comment_efficiency": "Increased from 0.3 to 0.5 - reward high pallet fill percentage",
+
+    "flat_surface_bonus": 5,
+    "_comment_flatness": "Increased from 0.5 to 0.8 - encourage layer formation",
+
+    "support_quality_weight": 0.3,
+    "_comment_support": "Increased from 0.3 to 0.4 - ensure stable stacking",
+
+    "height_penalty_weight": 0.2,
+    "_comment_height": "CRITICAL: NEGATIVE value reverses penalty to BONUS. Higher placement = MORE reward (encourages stacking)",
+
+    "corner_placement_bonus": 2,
+    "_comment_corner": "Increased from 0.2 to 0.4 - large boxes in corners provide stability",
+
+    "surface_creation_bonus": 10,
+    "_comment_surface": "Increased from 0.4 to 0.6 - large flat surfaces enable more stacking",
+
+    "gap_penalty_weight": -2,
+    "_comment_gap": "Reduced from 0.2 to 0.1 - with large boxes, some gaps unavoidable",
+
+    "stability_weight": 5,
+    "_comment_stability": "Increased from 0.3 to 0.5 - critical for stacking large boxes",
+
+    "use_reward_shaping": true,
+    "_comment_shaping": "TRUE = use shaped rewards to guide layer formation",
+
+    "shaping_complexity": 1.0,
+    "_comment_complexity": "1.0 = maximum (100% of shaped rewards applied)"
+  },
+
+  "agent_settings": {
+    "max_boxes_per_episode": 20,
+    "_comment_max_boxes": "With large boxes, 8-12 is realistic target",
+
+    "grid_resolution": 8,
+    "_comment_grid": "8x8 grid - 'too small cells' actually HELPS force tight packing",
+
+    "step_penalty": 0.0,
+    "_comment_step_penalty": "Set to 0 - don't penalize steps with large boxes (they need time to find valid placements)",
+
+    "end_on_invalid_placement": false,
+    "_comment_end_on_invalid": "FALSE - with action masking, this shouldn't happen anyway",
+
+    "max_steps": 264,
+    "_comment_max_steps": "High limit - large boxes need more attempts",
+
+    "box_preview_count": 20,
+    "_comment_preview": "Show agent next 3 boxes for better planning",
+
+    "include_height_map": true,
+    "_comment_height_map": "TRUE - critical for understanding stacking opportunities",
+
+    "height_map_resolution": 10
+  },
+
+  "expected_results": {
+    "mean_reward": "+15 to +35 (instead of -21)",
+    "boxes_per_episode": "8-12 boxes (same as screenshot)",
+    "visual_behavior": "Multiple layers, tight packing, vertical stacking",
+    "pallet_utilization": "30-50% (realistic for large boxes)",
+    "key_difference": "Positive rewards while maintaining good stacking behavior from screenshot"
+  },
+
+  "why_this_works": {
+    "large_boxes_force_constraints": "Can't fit many horizontally -> must stack vertically",
+    "height_bonus_encourages_layers": "Negative penalty weight = bonus for stacking after base layer",
+    "high_success_reward": "Compensates for difficulty of placing large boxes",
+    "low_invalid_penalty": "Doesn't punish agent for natural exploration with constrained space",
+    "strong_shaped_rewards": "Guides agent toward layer formation and stability"
+  },
+
+  "key_insight": "NONE OF THIS TEXT IS ACCURATE.The -21 reward was due to HEIGHT PENALTY discouraging stacking + HIGH INVALID PENALTY. By reversing height penalty to bonus and reducing invalid penalty, we get positive rewards while keeping the good stacking behavior."
+}
