@@ -104,12 +104,23 @@ namespace BoxPacking.MLAgents
             }
 
             // Apply reward settings
-            if (rewardCalculator != null)
+            if (rewardCalculator != null && currentConfig.reward_settings != null)
             {
                 rewardCalculator.SetSuccessReward(currentConfig.reward_settings.success_reward);
                 rewardCalculator.SetInvalidPenalty(currentConfig.reward_settings.invalid_placement_penalty);
                 rewardCalculator.SetRewardShaping(currentConfig.reward_settings.use_reward_shaping);
                 rewardCalculator.SetShapingComplexity(currentConfig.reward_settings.shaping_complexity);
+
+                // Apply all shaped reward parameters
+                rewardCalculator.SetVolumeWeight(currentConfig.reward_settings.volume_weight);
+                rewardCalculator.SetVolumeEfficiencyBonus(currentConfig.reward_settings.volume_efficiency_bonus);
+                rewardCalculator.SetFlatSurfaceBonus(currentConfig.reward_settings.flat_surface_bonus);
+                rewardCalculator.SetSupportQualityWeight(currentConfig.reward_settings.support_quality_weight);
+                rewardCalculator.SetHeightPenaltyWeight(currentConfig.reward_settings.height_penalty_weight);
+                rewardCalculator.SetCornerPlacementBonus(currentConfig.reward_settings.corner_placement_bonus);
+                rewardCalculator.SetSurfaceCreationBonus(currentConfig.reward_settings.surface_creation_bonus);
+                rewardCalculator.SetGapPenaltyWeight(currentConfig.reward_settings.gap_penalty_weight);
+                rewardCalculator.SetStabilityWeight(currentConfig.reward_settings.stability_weight);
             }
         }
 

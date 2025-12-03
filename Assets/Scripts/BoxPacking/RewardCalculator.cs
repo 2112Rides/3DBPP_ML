@@ -309,27 +309,76 @@ namespace BoxPacking.MLAgents
         #endregion
         
         #region Configuration
-        
+
         public void SetRewardShaping(bool enable)
         {
             useRewardShaping = enable;
         }
-        
+
         public void SetShapingComplexity(float complexity)
         {
             shapingComplexity = Mathf.Clamp01(complexity);
         }
-        
+
         public void SetSuccessReward(float reward)
         {
             successReward = reward;
         }
-        
+
         public void SetInvalidPenalty(float penalty)
         {
             invalidPlacementPenalty = penalty;
         }
-        
+
+        // Volume efficiency setters
+        public void SetVolumeWeight(float weight)
+        {
+            volumeWeight = weight;
+        }
+
+        public void SetVolumeEfficiencyBonus(float bonus)
+        {
+            volumeEfficiencyBonus = bonus;
+        }
+
+        // Placement quality setters
+        public void SetFlatSurfaceBonus(float bonus)
+        {
+            flatSurfaceBonus = bonus;
+        }
+
+        public void SetSupportQualityWeight(float weight)
+        {
+            supportQualityWeight = weight;
+        }
+
+        public void SetHeightPenaltyWeight(float weight)
+        {
+            heightPenaltyWeight = weight;
+        }
+
+        // Strategic placement setters
+        public void SetCornerPlacementBonus(float bonus)
+        {
+            cornerPlacementBonus = bonus;
+        }
+
+        public void SetSurfaceCreationBonus(float bonus)
+        {
+            surfaceCreationBonus = bonus;
+        }
+
+        public void SetGapPenaltyWeight(float weight)
+        {
+            gapPenaltyWeight = weight;
+        }
+
+        // Stability setter
+        public void SetStabilityWeight(float weight)
+        {
+            stabilityWeight = weight;
+        }
+
         #endregion
     }
 }
