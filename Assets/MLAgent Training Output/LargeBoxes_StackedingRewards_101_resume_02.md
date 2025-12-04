@@ -102,7 +102,16 @@ ________________________________________________________________________________
 [INFO] BoxPacker. Step: 440000. Time Elapsed: 3288.535 s. Mean Reward: 23.451. Std of Reward: 10.273. Training.
 [INFO] BoxPacker. Step: 450000. Time Elapsed: 3438.041 s. Mean Reward: 23.487. Std of Reward: 10.358. Training.
 [INFO] BoxPacker. Step: 460000. Time Elapsed: 3606.523 s. Mean Reward: 24.084. Std of Reward: 10.345. Training.
-
+[INFO] BoxPacker. Step: 470000. Time Elapsed: 3754.075 s. Mean Reward: 23.946. Std of Reward: 10.657. Training.
+[INFO] BoxPacker. Step: 480000. Time Elapsed: 3887.761 s. Mean Reward: 24.396. Std of Reward: 10.495. Training.
+[INFO] BoxPacker. Step: 490000. Time Elapsed: 4013.699 s. Mean Reward: 24.095. Std of Reward: 10.208. Training.
+[INFO] BoxPacker. Step: 500000. Time Elapsed: 4145.408 s. Mean Reward: 24.786. Std of Reward: 10.478. Training.
+[INFO] Exported results\LargeBoxes_StackingRewards_101\BoxPacker\BoxPacker-499994.onnx
+[INFO] BoxPacker. Step: 510000. Time Elapsed: 4306.079 s. Mean Reward: 24.856. Std of Reward: 10.980. Training.
+[INFO] Learning was interrupted. Please wait while the graph is generated.
+[INFO] Exported results\LargeBoxes_StackingRewards_101\BoxPacker\BoxPacker-517232.onnx
+[INFO] Copied results\LargeBoxes_StackingRewards_101\BoxPacker\BoxPacker-517232.onnx to results\LargeBoxes_StackingRewards_101\BoxPacker.onnx.
+(mlagents) PS C:\Users\dexte\anaconda3\envs\FirstMLEnv\3DBPP_ML\3DBPP_ML> 
 
 ____________________________________________________________________________________________________________________________________________________________________________________________
 1st RESUME run
