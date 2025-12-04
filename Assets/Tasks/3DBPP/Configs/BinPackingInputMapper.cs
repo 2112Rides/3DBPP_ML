@@ -68,7 +68,9 @@ namespace Tasks._3DBPP.Configs
             int totalGridPositions = gridResolution * gridResolution;
             int action = (rotation / 90) * totalGridPositions + gridX * gridResolution + gridZ;
 
-            return ActionBuffers.FromDiscreteActions(new int[] { action });
+            // Create ActionBuffers with discrete action
+            var discreteActions = new int[] { action };
+            return new ActionBuffers(null, discreteActions);
         }
 
         public bool IsActionConfirmed()
