@@ -178,7 +178,14 @@ namespace Tasks._3DBPP.Agents
         private void SpawnNextBox()
         {
             // For corner placement, use fixed box size
-            currentBox = new Box(fixedBoxSize, 10f);  // Simple box
+            currentBox = new Box
+            {
+                id = boxesAttempted,
+                size = fixedBoxSize,
+                weight = 10f,
+                color = Color.cyan,
+                canBeRotated = true
+            };
 
             Debug.Log($"Box {boxesAttempted + 1}/{maxBoxes} ready");
         }
