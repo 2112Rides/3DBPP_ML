@@ -20,6 +20,7 @@ namespace Tasks._3DBPP.Configs
         [Header("Grid Settings")]
         [SerializeField] private int gridResolution = 8;
         [SerializeField] private Vector3 palletSize = new Vector3(100, 100, 100);
+        [SerializeField] private Vector3 boxSize = new Vector3(20, 20, 20);  // For boundary constraints
 
         [Header("Current Selection")]
         [SerializeField] private int gridX = 0;
@@ -138,8 +139,19 @@ namespace Tasks._3DBPP.Configs
 
         private Vector3 GridToWorldPosition(int x, int z)
         {
-            float xPos = (x + 0.5f) / gridResolution * palletSize.x;
-            float zPos = (z + 0.5f) / gridResolution * palletSize.z;
+            // Map grid to world, accounting for box size to prevent overhang
+            // Grid corners map to positions where box fits entirely on pallet
+            // Grid 0 → box center at boxSize/2 (box edge at 0)
+            // Grid max → box center at palletSize - boxSize/2 (box edge at palletSize)
+
+            float halfBoxX = boxSize.x / 2f;
+            float halfBoxZ = boxSize.z / 2f;
+            float usableWidth = palletSize.x - boxSize.x;
+            float usableDepth = palletSize.z - boxSize.z;
+
+            float xPos = halfBoxX + (x / (float)(gridResolution - 1)) * usableWidth;
+            float zPos = halfBoxZ + (z / (float)(gridResolution - 1)) * usableDepth;
+
             return new Vector3(xPos, 0, zPos);
         }
 
@@ -149,16 +161,21 @@ namespace Tasks._3DBPP.Configs
         private void OnDrawGizmos()
         {
             Vector3 worldPos = GridToWorldPosition(gridX, gridZ);
-            worldPos.y = 10f;  // Raise above pallet
+            worldPos.y = boxSize.y / 2f;  // Center of box at ground level
 
-            // Draw selection cursor
+            // Draw selection cursor (box preview) - matches actual box size
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireCube(worldPos, new Vector3(10, 5, 10));
+            Gizmos.DrawWireCube(worldPos, boxSize);
 
-            // Draw rotation indicator
+            // Draw rotation indicator (arrow on top)
+            Vector3 arrowStart = worldPos;
+            arrowStart.y = boxSize.y;
             Vector3 forward = Quaternion.Euler(0, rotation, 0) * Vector3.forward;
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(worldPos, worldPos + forward * 8);
+            Gizmos.DrawLine(arrowStart, arrowStart + forward * (boxSize.x / 2f));
+
+            // Draw small sphere at arrow tip
+            Gizmos.DrawSphere(arrowStart + forward * (boxSize.x / 2f), 1f);
         }
 
         /// <summary>

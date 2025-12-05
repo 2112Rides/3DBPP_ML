@@ -155,25 +155,37 @@ namespace Tasks._3DBPP.Curriculum
         /// </summary>
         private void OnDrawGizmos()
         {
-            // Draw corner zones
-            Gizmos.color = Color.yellow;
+            // Draw corner zones INSIDE the pallet
             float height = 10f;
+            float offset = cornerTolerance / 2f;  // Offset from edge to center corner zone inside pallet
 
-            // Corner positions
+            // Corner positions (offset inward from edges)
             Vector3[] corners = new Vector3[]
             {
-                new Vector3(0, height/2, 0),                      // Top-Left
-                new Vector3(palletSize.x, height/2, 0),           // Top-Right
-                new Vector3(0, height/2, palletSize.z),           // Bottom-Left
-                new Vector3(palletSize.x, height/2, palletSize.z) // Bottom-Right
+                new Vector3(offset, height/2, offset),                                    // Top-Left (back-left)
+                new Vector3(palletSize.x - offset, height/2, offset),                     // Top-Right (back-right)
+                new Vector3(offset, height/2, palletSize.z - offset),                     // Bottom-Left (front-left)
+                new Vector3(palletSize.x - offset, height/2, palletSize.z - offset)       // Bottom-Right (front-right)
             };
 
             // Draw corner cubes
             for (int i = 0; i < corners.Length; i++)
             {
                 Gizmos.color = cornersOccupied[i] ? Color.green : Color.yellow;
-                Gizmos.DrawWireCube(corners[i], Vector3.one * cornerTolerance);
+                // Convert local corner position to world using the GameObject's transform
+                Vector3 worldCorner = transform.TransformPoint(corners[i]);
+                // Scale the gizmo size by the object's lossy scale so visualization matches transform
+                Vector3 worldSize = Vector3.Scale(Vector3.one * cornerTolerance, transform.lossyScale);
+                Gizmos.DrawWireCube(worldCorner, worldSize);
             }
+
+            // Draw pallet bounds for reference (use object's transform)
+            Gizmos.color = Color.white;
+            Vector3 palletCenterLocal = new Vector3(palletSize.x/2, 0, palletSize.z/2);
+            Vector3 palletSizeLocal = new Vector3(palletSize.x, 0.1f, palletSize.z);
+            Vector3 palletCenterWorld = transform.TransformPoint(palletCenterLocal);
+            Vector3 palletSizeWorld = Vector3.Scale(palletSizeLocal, transform.lossyScale);
+            Gizmos.DrawWireCube(palletCenterWorld, palletSizeWorld);
         }
     }
 }

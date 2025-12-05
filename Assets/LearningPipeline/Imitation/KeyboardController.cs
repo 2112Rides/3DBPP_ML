@@ -25,10 +25,6 @@ namespace LearningPipeline.Imitation
     [RequireComponent(typeof(LearningAgent))]
     public class KeyboardController : MonoBehaviour
     {
-        [Header("Components")]
-        [Tooltip("The task-specific input mapper (assign in Inspector)")]
-        [SerializeField] private MonoBehaviour inputMapperBehaviour;
-
         [Header("Recording Settings")]
         [SerializeField] private KeyCode toggleRecordingKey = KeyCode.D;
         [SerializeField] private KeyCode cancelEpisodeKey = KeyCode.Escape;
@@ -46,14 +42,22 @@ namespace LearningPipeline.Imitation
         {
             agent = GetComponent<LearningAgent>();
 
-            // Get IInputMapper from the assigned MonoBehaviour
-            if (inputMapperBehaviour != null)
+            // Automatically find IInputMapper component on this GameObject
+            // No manual assignment needed - just add an IInputMapper component (e.g. BinPackingInputMapper)
+            MonoBehaviour[] components = GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour component in components)
             {
-                inputMapper = inputMapperBehaviour as IInputMapper;
-                if (inputMapper == null)
+                if (component is IInputMapper)
                 {
-                    Debug.LogError($"[KeyboardController] {inputMapperBehaviour.name} does not implement IInputMapper!");
+                    inputMapper = component as IInputMapper;
+                    Debug.Log($"[KeyboardController] Found IInputMapper: {component.GetType().Name}");
+                    break;
                 }
+            }
+
+            if (inputMapper == null)
+            {
+                Debug.LogError("[KeyboardController] No IInputMapper component found on this GameObject! Add BinPackingInputMapper or similar.");
             }
 
             // Try to get DemonstrationRecorder
@@ -88,6 +92,13 @@ namespace LearningPipeline.Imitation
             if (Input.GetKeyDown(cancelEpisodeKey) && isRecording)
             {
                 CancelCurrentEpisode();
+            }
+
+            // CRITICAL: Only request decision when action is confirmed (space bar pressed)
+            // This prevents automatic box placement every frame
+            if (inputMapper.IsActionConfirmed())
+            {
+                agent.RequestDecision();
             }
 
             // Display input hints if enabled
@@ -182,6 +193,25 @@ namespace LearningPipeline.Imitation
                 GUI.Label(new Rect(Screen.width - 250, 10, 240, 30), "● RECORDING", style);
                 GUI.Label(new Rect(Screen.width - 250, 40, 240, 30),
                     $"Actions: {actionsRecorded}", style);
+
+                // Display episode count (from ML-Agents Agent.CompletedEpisodes)
+                if (agent != null)
+                {
+                    GUI.Label(new Rect(Screen.width - 250, 70, 240, 30),
+                        $"Episodes: {agent.CompletedEpisodes}", style);
+                }
+            }
+            else
+            {
+                // Show episode count even when not recording (in corner, smaller)
+                if (agent != null && agent.CompletedEpisodes > 0)
+                {
+                    GUIStyle smallStyle = new GUIStyle();
+                    smallStyle.fontSize = 16;
+                    smallStyle.normal.textColor = Color.yellow;
+                    GUI.Label(new Rect(Screen.width - 200, 10, 190, 25),
+                        $"Episodes Completed: {agent.CompletedEpisodes}", smallStyle);
+                }
             }
 
             // Display input state
