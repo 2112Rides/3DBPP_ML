@@ -75,6 +75,8 @@ models/
 summaries/
 *.nn
 *.onnx
+# Timer files are auto-generated during runtime
+*_timers.json
 
 # Python virtual environments (if any)
 venv/
