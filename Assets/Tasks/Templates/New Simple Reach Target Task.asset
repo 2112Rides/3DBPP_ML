@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67293549a08e89845b20602a7ad1483c, type: 3}
+  m_Name: New Simple Reach Target Task
+  m_EditorClassIdentifier: 
+  taskId: task_unnamed
+  taskDescription: Test Task
+  maxEpisodeTime: 30
+  maxSteps: 1000
+  successReward: 10
+  failurePenalty: -1
+  timeoutPenalty: -0.5
+  targetPrefab: {fileID: 2094407853683606586, guid: 1ad568af287dc5c4bbb2032074e052a6, type: 3}
+  targetRadius: 0.5
+  successDistance: 0.1
+  spawnAreaMin: {x: -5, y: 0, z: -5}
+  spawnAreaMax: {x: 5, y: 3, z: 5}
+  targetMoves: 0
+  moveAmplitude: {x: 2, y: 0, z: 0}
+  moveFrequency: 1
+  distanceRewardScale: 0.01
+  reachReward: 5
