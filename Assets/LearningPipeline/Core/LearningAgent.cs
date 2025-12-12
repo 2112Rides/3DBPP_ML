@@ -39,6 +39,11 @@ namespace LearningPipeline.Core
         /// </summary>
         public override void OnEpisodeBegin()
         {
+            // Ensure metrics dictionary is initialized
+            if (episodeMetrics == null)
+            {
+                episodeMetrics = new Dictionary<string, float>();
+            }
             episodeMetrics.Clear();
 
             if (currentTask != null)
